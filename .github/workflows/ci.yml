@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (lint, types, tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - run: uv sync
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run mypy
+      - run: uv run pytest --cov=prra --cov-report=term-missing
+
+  docs:
+    name: Docs (links and Mermaid diagrams)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check Markdown links and anchors
+        run: python scripts/check_docs.py
+      - name: Render every Mermaid diagram
+        run: |
+          python scripts/extract_mermaid.py "$RUNNER_TEMP/mmd"
+          echo '{"args":["--no-sandbox"]}' > "$RUNNER_TEMP/puppeteer.json"
+          npm install --no-save @mermaid-js/mermaid-cli@11.4.2
+          for f in "$RUNNER_TEMP"/mmd/*.mmd; do
+            npx mmdc -p "$RUNNER_TEMP/puppeteer.json" -i "$f" -o "${f%.mmd}.svg" -q
+          done
+
+  container:
+    name: Container image builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t prra-api:ci backend

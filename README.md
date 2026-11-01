@@ -203,7 +203,18 @@ Details, estimates and exit criteria: [Roadmap](docs/08-roadmap.md). Work is tra
 
 ## Project status
 
-**Design phase.** This repository currently contains the product definition and architecture. No application code yet: the plan is to review the design, then build Phase 0-1. Feedback on the design is welcome via pull-request comments and issues.
+**Phase 0 (Foundations) is under way.** The design is approved and merged; the first code is a backend skeleton: a FastAPI **modular monolith** whose module boundaries are enforced by tests ([ADR-0002](docs/adr/0002-modular-monolith-first.md)), OpenTelemetry from day one, CI, and a local dev stack. No product features yet. Progress is tracked in [GitHub Issues](../../issues) by milestone.
+
+### Run it locally
+
+```bash
+make install   # backend dependencies (needs uv)
+make test      # unit + architecture tests
+make run       # API on http://localhost:8000  (docs at /docs)
+make check     # lint, types, tests, docs links
+# or the full local stack (API + Postgres + OpenTelemetry collector):
+docker compose up --build
+```
 
 ## Contributing
 
