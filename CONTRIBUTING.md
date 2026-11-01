@@ -19,6 +19,16 @@ Thanks for helping! This project is in its **design phase**, so most contributio
 3. Keep PRs small and focused; link the issue (`Closes #n`) and the requirement ID (`FR-xxx`).
 4. Reviews are by at least one maintainer. Docs and ADRs are reviewed like code.
 
+## Development setup (backend)
+
+```bash
+make install        # uv sync in backend/
+make check          # ruff, mypy (strict), pytest, docs link check
+pre-commit install  # optional: run linters on every commit
+```
+
+Code lives in `backend/src/prra/`. **Module boundaries are enforced:** a module may import another only through `prra.modules.<other>.public`, and `prra.shared` never imports modules (`backend/tests/architecture`). If that test fails, change the design with an ADR, not the test.
+
 ## Documentation conventions
 
 - **Diagrams as code** (Mermaid) so they diff and render on GitHub. Keep node labels in quotes; use `<br/>` for line breaks.

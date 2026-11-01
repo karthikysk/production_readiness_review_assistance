@@ -1,0 +1,23 @@
+# Local development stack. Connectors run as mocks/record-replay (no live tools needed).
+services:
+  api:
+    build: ./backend
+    ports: ["8000:8000"]
+    environment:
+      PRRA_ENVIRONMENT: local
+      PRRA_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+    depends_on: [postgres, otel-collector]
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: prra
+      POSTGRES_PASSWORD: prra-local-only
+      POSTGRES_DB: prra
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+  otel-collector:
+    image: otel/opentelemetry-collector:0.111.0
+    command: ["--config=/etc/otel.yaml"]
+    volumes: ["./deploy/otel-collector.yaml:/etc/otel.yaml:ro"]
+volumes:
+  pgdata:
