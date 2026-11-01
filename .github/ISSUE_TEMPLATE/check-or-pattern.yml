@@ -1,0 +1,28 @@
+name: New check or observability pattern
+description: Suggest a readiness check or a component pattern
+labels: ["enhancement", "checks"]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component type (if a pattern)
+      placeholder: "e.g. Redis, SQS, Lambda"
+  - type: textarea
+    id: what
+    attributes:
+      label: What should be verified?
+    validations: { required: true }
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter? (what goes wrong without it)
+    validations: { required: true }
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Minimum tier
+      options: [T0, T1, T2, T3]
+  - type: input
+    id: how
+    attributes:
+      label: How can it be obtained or verified? (tool / API / metric)
