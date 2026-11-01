@@ -1,0 +1,28 @@
+name: New connector request
+description: Ask for an integration with another tool
+labels: ["enhancement", "connector"]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Tool / product
+    validations: { required: true }
+  - type: checkboxes
+    id: caps
+    attributes:
+      label: Capabilities needed
+      options:
+        - label: change_management
+        - label: logs
+        - label: metrics
+        - label: dashboards
+        - label: alerting
+        - label: oncall
+        - label: cicd
+        - label: cloud
+        - label: catalog
+        - label: docs
+  - type: textarea
+    id: notes
+    attributes:
+      label: Auth method and API notes

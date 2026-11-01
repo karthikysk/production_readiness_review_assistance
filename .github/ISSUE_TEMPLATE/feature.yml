@@ -1,0 +1,20 @@
+name: Feature / requirement
+description: Propose a capability or requirement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: User story
+      description: "As a <persona>, I want <capability>, so that <benefit>."
+    validations: { required: true }
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Given / When / Then
+  - type: input
+    id: req
+    attributes:
+      label: Related requirement IDs
+      placeholder: FR-304, NFR-02
